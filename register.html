@@ -13,9 +13,7 @@
     <link rel="stylesheet" href="css/register.css" />
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
 
-    <script type="text/javascript" src="js/validate.min.js"></script>
-
-    <script src="js/jquery-3.4.1.js"></script>
+    <script src="js/jquery-3.3.1.slim.min.js"></script>
     <script src="js/popper.min.js"></script>
     <script src="bootstrap/js/bootstrap.min.js"></script>
   </head>
@@ -49,6 +47,22 @@
               />
             </div>
             <!-- form-group// -->
+
+            <div class="form-group has-success">
+              <label class="form-control-label" for="inputSuccess1"
+                >Input with success</label
+              >
+              <input
+                type="text"
+                class="form-control form-control-success"
+                id="inputSuccess1"
+              />
+              <div class="form-control-feedback">Success! You've done it.</div>
+              <small class="form-text text-muted"
+                >Example help text that remains unchanged.</small
+              >
+            </div>
+
             <div class="form-group input-group">
               <div class="input-group-prepend">
                 <span class="input-group-text">
@@ -181,6 +195,7 @@
           var el = document.querySelector("#el");
           if (errors.length > 0) {
             // Show the errors
+            console.log(errors);
             if (errors.length > 0) {
               var errorString = "";
 
@@ -197,19 +212,18 @@
           }
         }
       );
+
       const appState = {};
 
       let content = { some: "content" };
 
-      // The actual fetch request
-      fetch("some-url", {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(content)
-      });
-      // .then()...
+      // fetch("http://someurl.com", {
+      //   method: "post",
+      //   headers: {
+      //     "Content-Type": "application/json"
+      //   },
+      //   body: JSON.stringify(content)
+      // });
 
       const startApp = () => {};
     </script>
