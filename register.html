@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Register</title>
+
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.0.8/css/all.css"
+    />
+    <link rel="stylesheet" href="css/register.css" />
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
+
+    <script type="text/javascript" src="js/validate.min.js"></script>
+
+    <script src="js/jquery-3.4.1.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <br />
+      <p class="text-center"></p>
+      <hr />
+      <div class="card bg-light">
+        <article class="card-body mx-auto" style="max-width: 400px;">
+          <h4 class="card-title mt-3 text-center">Onboarding System</h4>
+
+          <p class="divider-text">
+            <span class="bg-light">o</span>
+          </p>
+
+          <div id="el"></div>
+          <form name="onboardForm" id="formID">
+            <div class="form-group input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <i class="far fa-user"></i>
+                </span>
+              </div>
+              <input
+                id="fname"
+                name="FullName"
+                class="form-control"
+                placeholder="Full name"
+                type="text"
+              />
+            </div>
+            <!-- form-group// -->
+            <div class="form-group input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <i class="fa fa-envelope"></i>
+                </span>
+              </div>
+              <input
+                id="mail"
+                name="Email"
+                class="form-control"
+                placeholder="Email address"
+                type="email"
+              />
+            </div>
+            <!-- form-group// -->
+            <div class="form-group input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <i class="fa fa-user"></i>
+                </span>
+              </div>
+              <input
+                id="uname"
+                name="UserName"
+                class="form-control"
+                placeholder="Username"
+                type="text"
+              />
+            </div>
+            <!-- form-group// -->
+
+            <div class="form-group input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <i class="fa fa-lock"></i>
+                </span>
+              </div>
+              <input
+                id="pword"
+                name="Password"
+                class="form-control"
+                placeholder="Create password"
+                type="password"
+              />
+            </div>
+            <!-- form-group// -->
+            <div class="form-group input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <i class="fa fa-lock"></i>
+                </span>
+              </div>
+              <input
+                id="cpass"
+                name="ConfirmPassword"
+                class="form-control"
+                placeholder="Repeat password"
+                type="password"
+              />
+            </div>
+            <!-- form-group// -->
+            <div class="form-group">
+              <button
+                id="CreateButton"
+                type="submit"
+                class="btn btn-primary btn-block"
+              >
+                Create Account
+              </button>
+            </div>
+            <!-- form-group// -->
+          </form>
+        </article>
+      </div>
+      <!-- card.// -->
+    </div>
+    <!--container end.//-->
+
+    <br /><br />
+    <footer class="bg-secondary mb-3">
+      <div class="card-body text-center">
+        <h3 class="text-white mt-3">Having Trouble?</h3>
+        <p class="h5 text-white">contact system support</p>
+        <br />
+        <p>
+          <a class="btn btn-warning" target="_blank" href="#">
+            support service <i class="fa fa-window-restore "></i
+          ></a>
+        </p>
+      </div>
+      <br /><br />
+    </footer>
+
+    <script>
+      var validator = new FormValidator(
+        "onboardForm",
+        [
+          {
+            name: "FullName",
+            display: "required",
+            rules: "required"
+          },
+          {
+            name: "alphanumeric",
+            rules: "alpha_numeric"
+          },
+          {
+            name: "Password",
+            rules: "required"
+          },
+          {
+            name: "ConfirmPassword",
+            display: "password confirmation",
+            rules: "required|matches[Password]"
+          },
+          {
+            name: "Email",
+            rules: "valid_email",
+            depends: function() {
+              return Math.random() > 0.5;
+            }
+          },
+          {
+            name: "minlength",
+            display: "min length",
+            rules: "min_length[8]"
+          }
+        ],
+        function(errors, event) {
+          var el = document.querySelector("#el");
+          if (errors.length > 0) {
+            // Show the errors
+            if (errors.length > 0) {
+              var errorString = "";
+
+              for (
+                var i = 0, errorLength = errors.length;
+                i < errorLength;
+                i++
+              ) {
+                errorString += errors[i].message + "<br />";
+              }
+
+              el.innerHTML = errorString;
+            }
+          }
+        }
+      );
+      const appState = {};
+
+      let content = { some: "content" };
+
+      // The actual fetch request
+      fetch("some-url", {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(content)
+      });
+      // .then()...
+
+      const startApp = () => {};
+    </script>
+  </body>
+</html>
