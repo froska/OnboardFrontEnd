@@ -182,6 +182,35 @@
         return field.value.length && field.value.length > 0;
       };
 
+      const unameBlurEvent = () => {
+        const unameTarget = document.querySelector("#uname");
+        const unameRequired = isRequired(unameTarget);
+        if (!/\s/.test(unameTarget.value)) {
+          flagIfInvalid(unameTarget, true);
+        }
+      };
+
+      const emailBlurEvent = () => {
+        const email = document.querySelector("#mail");
+        const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        const test = regex.test(email.value);
+        if (test) {
+          flagIfInvalid(email, true);
+        }
+      };
+
+      const fnameBlurEvent = () => {
+        let target = document.querySelector("#fname");
+        const inName = target.value;
+        const inNameSplit = inName.split(" ");
+        const [first, last] = inNameSplit;
+        const isValid =
+          inNameSplit.length === 2 && first.length >= 3 && last.length >= 3;
+        if (test) {
+          flagIfInvalid(target, true);
+        }
+      };
+
       const validateEmail = event => {
         const email = document.querySelector("#mail");
         const errorMessage = document.querySelector("#vemail");
@@ -198,10 +227,24 @@
         console.log(email);
       };
 
-      const validateUsername = () => {};
+      const validateUsername = () => {
+        const unameTarget = document.querySelector("#uname");
+        const errorMessage = document.querySelector("#vuname");
+        const unameRequired = isRequired(unameTarget);
+        if (unameRequired) {
+          if (/\s/.test(unameTarget.value)) {
+            flagIfInvalid(unameTarget, false);
+            errorMessage.textContent = "Username cannot contain space";
+          }
+        } else {
+          flagIfInvalid(unameTarget, unameRequired);
+          errorMessage.textContent = "Username is required";
+        }
+      };
       const validatePassword = () => {
         const passTarget = document.querySelector("#pword");
         const pErrorMessage = document.querySelector("#vpass");
+        const cpErrorMessage = document.querySelector("#vcpass");
         const cpassTarget = document.querySelector("#cpass");
         const passRequired = isRequired(passTarget);
         const cpassRequired = isRequired(cpassTarget);
@@ -214,6 +257,11 @@
           if (/\s/.test(passTarget.value)) {
             flagIfInvalid(passTarget, false);
             pErrorMessage.textContent = "Password cannot contain space";
+          } else {
+            let checkConfirm = passTarget === cpassTarget;
+            flagIfInvalid(cpassTarget, checkConfirm);
+            cpErrorMessage.textContent =
+              "Confirmation Password does not match the above";
           }
         } else {
           flagIfInvalid(passTarget, passRequired);
@@ -248,13 +296,20 @@
         validateFullName();
         validateEmail();
         validatePassword();
+        validateUsername();
       };
 
       const activateRegistrationUI = () => {
         const firstInput = document.querySelector("#formID input");
         firstInput.focus();
-        const button = document.querySelector("#formID");
-        button.addEventListener("submit", validateInput, false);
+        const fname = document.querySelector("#fname");
+        const uname = document.querySelector("#uname");
+        const email = document.querySelector("#mail");
+        fname.addEventListener("blur", fnameBlurEvent);
+        uname.addEventListener("blur", emailBlurEvent);
+        email.addEventListener("blur", emailBlurEvent);
+        const form = document.querySelector("#formID");
+        form.addEventListener("submit", validateInput, false);
       };
 
       const startApp = () => {
