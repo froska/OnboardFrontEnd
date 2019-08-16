@@ -258,10 +258,12 @@
             flagIfInvalid(passTarget, false);
             pErrorMessage.textContent = "Password cannot contain space";
           } else {
-            let checkConfirm = passTarget === cpassTarget;
+            let checkConfirm = passTarget.value === cpassTarget.value;
             flagIfInvalid(cpassTarget, checkConfirm);
+            flagIfInvalid(passTarget, checkConfirm);
             cpErrorMessage.textContent =
               "Confirmation Password does not match the above";
+            console.log(passTarget.value);
           }
         } else {
           flagIfInvalid(passTarget, passRequired);
@@ -286,7 +288,7 @@
           flagIfInvalid(target, fnameRequired);
           errorMessage.textContent = "Full Name is Required";
         }
-        console.log(target);
+        //console.log(target);
         //return isValid;
       };
 
