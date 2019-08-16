@@ -206,7 +206,7 @@
         const [first, last] = inNameSplit;
         const isValid =
           inNameSplit.length === 2 && first.length >= 3 && last.length >= 3;
-        if (test) {
+        if (isValid) {
           flagIfInvalid(target, true);
         }
       };
@@ -306,7 +306,7 @@
         const uname = document.querySelector("#uname");
         const email = document.querySelector("#mail");
         fname.addEventListener("blur", fnameBlurEvent);
-        uname.addEventListener("blur", emailBlurEvent);
+        uname.addEventListener("blur", unameBlurEvent);
         email.addEventListener("blur", emailBlurEvent);
         const form = document.querySelector("#formID");
         form.addEventListener("submit", validateInput, false);
