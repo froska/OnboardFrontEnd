@@ -204,6 +204,7 @@
       };
 
       const validateEmail = event => {
+        let isValid = false;
         const email = document.querySelector("#mail");
         const errorMessage = document.querySelector("#vemail");
         const emailRequired = isRequired(email);
@@ -212,14 +213,18 @@
           let validEmail = regex.test(email.value);
           flagIfInvalid(email, validEmail);
           errorMessage.textContent = "Email is Invalid";
+          isValid = validEmail;
         } else {
           flagIfInvalid(email, emailRequired);
           errorMessage.textContent = "Email is Required";
+          isValid = emailRequired;
         }
         console.log(email);
+        return isValid;
       };
 
       const validateUsername = () => {
+        let isValid = false;
         const unameTarget = document.querySelector("#uname");
         const errorMessage = document.querySelector("#vuname");
         const unameRequired = isRequired(unameTarget);
@@ -227,13 +232,18 @@
           if (/\s/.test(unameTarget.value)) {
             flagIfInvalid(unameTarget, false);
             errorMessage.textContent = "Username cannot contain space";
-          }
+            isValid = false;
+          } else isValid = true;
         } else {
           flagIfInvalid(unameTarget, unameRequired);
           errorMessage.textContent = "Username is required";
+          isValid = unameRequired;
         }
+        return isValid;
       };
+
       const validatePassword = () => {
+        let isValid = false;
         const passTarget = document.querySelector("#pword");
         const pErrorMessage = document.querySelector("#vpass");
         const cpErrorMessage = document.querySelector("#vcpass");
@@ -245,33 +255,39 @@
             flagIfInvalid(passTarget, false);
             pErrorMessage.textContent =
               "Password Must be minimum of Six characters";
+            isValid = false;
           }
           if (/\s/.test(passTarget.value)) {
             flagIfInvalid(passTarget, false);
             pErrorMessage.textContent = "Password cannot contain space";
+            isValid = false;
           } else {
             let checkConfirm = passTarget.value === cpassTarget.value;
             flagIfInvalid(cpassTarget, checkConfirm);
             flagIfInvalid(passTarget, checkConfirm);
             cpErrorMessage.textContent =
               "Confirmation Password does not match the above";
+            isValid = checkConfirm;
             console.log(passTarget.value);
           }
         } else {
           flagIfInvalid(passTarget, passRequired);
           pErrorMessage.textContent = "Password is Required";
+          isValid = passRequired;
         }
+        return isValid;
       };
 
       const validateFullName = () => {
         let target = document.querySelector("#fname");
         const errorMessage = document.querySelector("#vfname");
         const fnameRequired = isRequired(target);
+        let isValid = false;
         if (fnameRequired) {
           const inName = target.value;
           const inNameSplit = inName.split(" ");
           const [first, last] = inNameSplit;
-          const isValid =
+          isValid =
             inNameSplit.length === 2 && first.length >= 3 && last.length >= 3;
           flagIfInvalid(target, isValid);
           errorMessage.textContent =
@@ -279,9 +295,10 @@
         } else {
           flagIfInvalid(target, fnameRequired);
           errorMessage.textContent = "Full Name is Required";
+          isValid = fnameRequired;
         }
         //console.log(target);
-        //return isValid;
+        return isValid;
       };
 
       const validateInput = () => {
@@ -291,6 +308,21 @@
         validateEmail();
         validatePassword();
         validateUsername();
+        console.log(
+          validateFullName() +
+            "," +
+            validateEmail() +
+            "," +
+            validatePassword() +
+            "," +
+            validateUsername()
+        );
+        return (
+          validateFullName() &&
+          validateEmail() &&
+          validatePassword() &&
+          validateUsername()
+        );
       };
 
       const creatUser = event => {
@@ -298,13 +330,13 @@
         //event.stopPropagation();
         let form = event.target;
         const formData = new FormData(form);
-        var object = {};
+        let object = {};
         formData.forEach((value, key) => {
           object[key] = value;
         });
-        var json = JSON.stringify(object);
+        let json = JSON.stringify(object);
 
-        console.log(json);
+        //console.log(json);
         let toastrMessage = "";
         toastr.options = {
           closeButton: false,
@@ -324,49 +356,53 @@
           hideMethod: "fadeOut"
         };
 
-        fetch("http://localhost:56495/api/ApplicationUser/Register", {
-          method: "post",
-          // mode: "no-cors", // no-cors, cors, *same-origin
-          // cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-          // //credentials: "same-origin", // include, *same-origin, omit
-          headers: {
-            "Content-Type": "application/json"
-            //"Content-Type": 'application/x-www-form-urlencoded'
-            //"Content-Type": "multipart/form-data"
-          },
-          //body: JSON.stringify(content)
-          body: json
-        })
-          .then(function(response) {
-            if (response.ok) {
-              return response.json();
-            }
-            throw Error(response.statusText);
+        console.log("Validate: " + validateInput());
+
+        if (validateInput()) {
+          fetch("http://localhost:56495/api/ApplicationUser/Register", {
+            method: "post",
+            // mode: "no-cors", // no-cors, cors, *same-origin
+            // cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+            // //credentials: "same-origin", // include, *same-origin, omit
+            headers: {
+              "Content-Type": "application/json"
+              //"Content-Type": 'application/x-www-form-urlencoded'
+              //"Content-Type": "multipart/form-data"
+            },
+            //body: JSON.stringify(content)
+            body: json
           })
-          .then(function(response) {
-            if (response.succeeded) {
-              toastr["success"]("User Successfully Created");
-              form.reset();
-            } else {
-              response.errors.forEach(element => {
-                switch (element.code) {
-                  case "DuplicateUserName":
-                    // Username already Exists
-                    toastrMessage = "Username already Exists";
-                    break;
-                  default:
-                    // Registration Failed
-                    toastrMessage = "Registration Failed";
-                    break;
-                }
-              });
-              toastr["warning"](toastrMessage);
-              console.error(response.errors);
-            }
-          })
-          .catch(function(error) {
-            console.error(error.message);
-          });
+            .then(function(response) {
+              if (response.ok) {
+                return response.json();
+              }
+              throw Error(response.statusText);
+            })
+            .then(function(response) {
+              if (response.succeeded) {
+                toastr["success"]("User Successfully Created");
+                form.reset();
+              } else {
+                response.errors.forEach(element => {
+                  switch (element.code) {
+                    case "DuplicateUserName":
+                      // Username already Exists
+                      toastrMessage = "Username already Exists";
+                      break;
+                    default:
+                      // Registration Failed
+                      toastrMessage = "Registration Failed";
+                      break;
+                  }
+                });
+                toastr["warning"](toastrMessage);
+                console.error(response.errors);
+              }
+            })
+            .catch(function(error) {
+              console.error(error.message);
+            });
+        } else return;
       };
 
       const activateRegistrationUI = () => {
